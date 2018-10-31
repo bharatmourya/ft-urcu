@@ -1,0 +1,1 @@
+../../include/urcu/uatomic/x86.h

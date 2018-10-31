@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: Userspace RCU signal
+Description: A userspace RCU (read-copy-update) library, signal version
+Version: 0.10.1
+Requires:
+Libs: -L${libdir} -lurcu-signal
+Cflags: -I${includedir} 
