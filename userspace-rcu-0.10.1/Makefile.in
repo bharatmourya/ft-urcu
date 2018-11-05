@@ -201,8 +201,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/config/compile \
 	$(top_srcdir)/config/missing \
 	$(top_srcdir)/include/urcu/config.h.in ChangeLog \
 	config/compile config/config.guess config/config.sub \
-	config/depcomp config/install-sh config/ltmain.sh \
-	config/missing
+	config/install-sh config/ltmain.sh config/missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)

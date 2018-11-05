@@ -27,10 +27,6 @@ uname -v = #3 SMP PREEMPT Sat Aug 11 15:55:09 IST 2018
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
 
-PATH: /home/bharat/Desktop/pintos/src/utils
-PATH: /home/bharat/Desktop/llvm-build/bin
-PATH: /home/bharat/bin
-PATH: /home/bharat/.local/bin
 PATH: /usr/local/sbin
 PATH: /usr/local/bin
 PATH: /usr/sbin
@@ -39,7 +35,6 @@ PATH: /sbin
 PATH: /bin
 PATH: /usr/games
 PATH: /usr/local/games
-PATH: /snap/bin
 
 
 ## ----------- ##
@@ -47,11 +42,11 @@ PATH: /snap/bin
 ## ----------- ##
 
 configure:2502: checking build system type
-configure:2516: result: x86_64-unknown-linux-gnu
+configure:2516: result: x86_64-pc-linux-gnu
 configure:2536: checking host system type
-configure:2549: result: x86_64-unknown-linux-gnu
+configure:2549: result: x86_64-pc-linux-gnu
 configure:2569: checking target system type
-configure:2582: result: x86_64-unknown-linux-gnu
+configure:2582: result: x86_64-pc-linux-gnu
 configure:2626: checking for a BSD-compatible install
 configure:2694: result: /usr/bin/install -c
 configure:2705: checking whether build environment is sane
@@ -411,9 +406,9 @@ configure:6625: checking whether ln -s works
 configure:6629: result: yes
 configure:6637: checking the maximum length of command line arguments
 configure:6768: result: 1572864
-configure:6816: checking how to convert x86_64-unknown-linux-gnu file names to x86_64-unknown-linux-gnu format
+configure:6816: checking how to convert x86_64-pc-linux-gnu file names to x86_64-pc-linux-gnu format
 configure:6856: result: func_convert_file_noop
-configure:6863: checking how to convert x86_64-unknown-linux-gnu file names to toolchain format
+configure:6863: checking how to convert x86_64-pc-linux-gnu file names to toolchain format
 configure:6883: result: func_convert_file_noop
 configure:6890: checking for /usr/bin/ld option to reload object files
 configure:6897: result: -r
@@ -1054,8 +1049,8 @@ configure:14924: $? = 0
 configure:14924: result: yes
 configure:14924: checking for getcpuid
 configure:14924: gcc -o conftest -g -O2   conftest.c  >&5
-/tmp/ccWmYbZv.o: In function `main':
-/home/bharat/Desktop/RCU/userspace-rcu-0.10.1/conftest.c:77: undefined reference to `getcpuid'
+/tmp/ccrndVQc.o: In function `main':
+/home/bharat/Desktop/RCU/ft-urcu/userspace-rcu-0.10.1/conftest.c:77: undefined reference to `getcpuid'
 collect2: error: ld returned 1 exit status
 configure:14924: $? = 1
 configure: failed program was:
@@ -1142,8 +1137,8 @@ configure: failed program was:
 configure:14924: result: no
 configure:14924: checking for gettid
 configure:14924: gcc -o conftest -g -O2   conftest.c  >&5
-/tmp/ccIwQRry.o: In function `main':
-/home/bharat/Desktop/RCU/userspace-rcu-0.10.1/conftest.c:77: undefined reference to `gettid'
+/tmp/cc7ETAbf.o: In function `main':
+/home/bharat/Desktop/RCU/ft-urcu/userspace-rcu-0.10.1/conftest.c:77: undefined reference to `gettid'
 collect2: error: ld returned 1 exit status
 configure:14924: $? = 1
 configure: failed program was:
@@ -1234,8 +1229,8 @@ configure:14924: $? = 0
 configure:14924: result: yes
 configure:14924: checking for memeset
 configure:14924: gcc -o conftest -g -O2   conftest.c  >&5
-/tmp/ccs0soRB.o: In function `main':
-/home/bharat/Desktop/RCU/userspace-rcu-0.10.1/conftest.c:78: undefined reference to `memeset'
+/tmp/ccPzncVk.o: In function `main':
+/home/bharat/Desktop/RCU/ft-urcu/userspace-rcu-0.10.1/conftest.c:78: undefined reference to `memeset'
 collect2: error: ld returned 1 exit status
 configure:14924: $? = 1
 configure: failed program was:
@@ -1642,15 +1637,15 @@ config.status:1422: linking include/urcu/arch/x86.h to include/urcu/arch.h
 config.status:1422: linking include/urcu/uatomic/x86.h to include/urcu/uatomic.h
 config.status:1441: executing depfiles commands
 config.status:1441: executing libtool commands
-configure:17943: checking for tput
-configure:17961: found /usr/bin/tput
-configure:17973: result: /usr/bin/tput
+configure:17944: checking for tput
+configure:17962: found /usr/bin/tput
+configure:17974: result: /usr/bin/tput
 
 ## ---------------- ##
 ## Cache variables. ##
 ## ---------------- ##
 
-ac_cv_build=x86_64-unknown-linux-gnu
+ac_cv_build=x86_64-pc-linux-gnu
 ac_cv_c_compiler_gnu=yes
 ac_cv_c_inline=inline
 ac_cv_c_int32_t=yes
@@ -1715,7 +1710,7 @@ ac_cv_header_sys_time_h=yes
 ac_cv_header_sys_types_h=yes
 ac_cv_header_unistd_h=yes
 ac_cv_header_vfork_h=no
-ac_cv_host=x86_64-unknown-linux-gnu
+ac_cv_host=x86_64-pc-linux-gnu
 ac_cv_objext=o
 ac_cv_path_EGREP='/bin/grep -E'
 ac_cv_path_FGREP='/bin/grep -F'
@@ -1742,7 +1737,7 @@ ac_cv_prog_cc_stdc=
 ac_cv_prog_make_make_set=yes
 ac_cv_safe_to_define___extensions__=yes
 ac_cv_search_clock_gettime='none required'
-ac_cv_target=x86_64-unknown-linux-gnu
+ac_cv_target=x86_64-pc-linux-gnu
 ac_cv_tls=__thread
 ac_cv_type__Bool=yes
 ac_cv_type_cpu_set_t=yes
@@ -1790,7 +1785,7 @@ lt_cv_truncate_bin='/bin/dd bs=4096 count=1'
 ## Output variables. ##
 ## ----------------- ##
 
-ACLOCAL='${SHELL} /home/bharat/Desktop/RCU/userspace-rcu-0.10.1/config/missing aclocal-1.15'
+ACLOCAL='${SHELL} /home/bharat/Desktop/RCU/ft-urcu/userspace-rcu-0.10.1/config/missing aclocal-1.15'
 AMDEPBACKSLASH='\'
 AMDEP_FALSE='#'
 AMDEP_TRUE=''
@@ -1803,9 +1798,9 @@ AM_DEFAULT_VERBOSITY='0'
 AM_V='$(V)'
 AR='ar'
 ARCHTYPE='x86'
-AUTOCONF='${SHELL} /home/bharat/Desktop/RCU/userspace-rcu-0.10.1/config/missing autoconf'
-AUTOHEADER='${SHELL} /home/bharat/Desktop/RCU/userspace-rcu-0.10.1/config/missing autoheader'
-AUTOMAKE='${SHELL} /home/bharat/Desktop/RCU/userspace-rcu-0.10.1/config/missing automake-1.15'
+AUTOCONF='${SHELL} /home/bharat/Desktop/RCU/ft-urcu/userspace-rcu-0.10.1/config/missing autoconf'
+AUTOHEADER='${SHELL} /home/bharat/Desktop/RCU/ft-urcu/userspace-rcu-0.10.1/config/missing autoheader'
+AUTOMAKE='${SHELL} /home/bharat/Desktop/RCU/ft-urcu/userspace-rcu-0.10.1/config/missing automake-1.15'
 AWK='gawk'
 CC='gcc'
 CCDEPMODE='depmode=gcc3'
@@ -1846,7 +1841,7 @@ LT_SYS_LIBRARY_PATH=''
 MAINT=''
 MAINTAINER_MODE_FALSE='#'
 MAINTAINER_MODE_TRUE=''
-MAKEINFO='${SHELL} /home/bharat/Desktop/RCU/userspace-rcu-0.10.1/config/missing makeinfo'
+MAKEINFO='${SHELL} /home/bharat/Desktop/RCU/ft-urcu/userspace-rcu-0.10.1/config/missing makeinfo'
 MANIFEST_TOOL=':'
 MKDIR_P='/bin/mkdir -p'
 NM='/usr/bin/nm -B'
@@ -1896,25 +1891,25 @@ am__tar='$${TAR-tar} chof - "$$tardir"'
 am__untar='$${TAR-tar} xf -'
 ax_pthread_config=''
 bindir='${exec_prefix}/bin'
-build='x86_64-unknown-linux-gnu'
+build='x86_64-pc-linux-gnu'
 build_alias=''
 build_cpu='x86_64'
 build_os='linux-gnu'
-build_vendor='unknown'
+build_vendor='pc'
 datadir='${datarootdir}'
 datarootdir='${prefix}/share'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
 dvidir='${docdir}'
 exec_prefix='${prefix}'
-host='x86_64-unknown-linux-gnu'
+host='x86_64-pc-linux-gnu'
 host_alias=''
 host_cpu='x86_64'
 host_os='linux-gnu'
-host_vendor='unknown'
+host_vendor='pc'
 htmldir='${docdir}'
 includedir='${prefix}/include'
 infodir='${datarootdir}/info'
-install_sh='${SHELL} /home/bharat/Desktop/RCU/userspace-rcu-0.10.1/config/install-sh'
+install_sh='${SHELL} /home/bharat/Desktop/RCU/ft-urcu/userspace-rcu-0.10.1/config/install-sh'
 libdir='${exec_prefix}/lib'
 libexecdir='${exec_prefix}/libexec'
 localedir='${datarootdir}/locale'
@@ -1931,11 +1926,11 @@ runstatedir='${localstatedir}/run'
 sbindir='${exec_prefix}/sbin'
 sharedstatedir='${prefix}/com'
 sysconfdir='${prefix}/etc'
-target='x86_64-unknown-linux-gnu'
+target='x86_64-pc-linux-gnu'
 target_alias=''
 target_cpu='x86_64'
 target_os='linux-gnu'
-target_vendor='unknown'
+target_vendor='pc'
 
 ## ----------- ##
 ## confdefs.h. ##

@@ -66,6 +66,7 @@ struct call_rcu_data {
 	int cpu_affinity;
 	unsigned long gp_count;
 	struct cds_list_head list;
+	unsigned long prev_qlen; /* maintained fo stall rcu*/
 } __attribute__((aligned(CAA_CACHE_LINE_SIZE)));
 
 struct call_rcu_completion {
@@ -272,43 +273,58 @@ static bool stall = false;
 static pthread_mutex_t resque_lock = PTHREAD_MUTEX_INITIALIZER;;
 
 static void resque() {
-  //atomic ?
-  stall = true;
-  printf("debug: stalled thread detected\n");
-  struct rcu_reader *index;
-  struct rcu_reader *stalled_reader;
-  cds_list_for_each_entry(index,&registry,node){
-    switch(rcu_reader_state(&index->ctr)){
-    case RCU_READER_ACTIVE_CURRENT:
-      // do nothing
-    case RCU_READER_INACTIVE:
-      // do nothing
-      break;
-    case RCU_READER_ACTIVE_OLD:
-      // this is the waiting thread 
-      stalled_reader =  index;
-      goto report_gp;
-      break;
-    }
-  }
+  	//atomic ?
+  	stall = true;
+  	printf("debug: stalled thread detected\n");
+ 	struct rcu_reader *index;
+ 	struct rcu_reader *stalled_reader = NULL;
+  	cds_list_for_each_entry(index,&registry,node){
+		switch(rcu_reader_state(&index->ctr)){
+			case RCU_READER_ACTIVE_CURRENT:
+			// do nothing
+	     		//printf("tid : %ld status : 1\n",index->tid); 
+			break;
+	
+			case RCU_READER_INACTIVE:
+			// do nothing
+	     		//printf("tid : %ld status : 2\n",index->tid); 
+		//	goto ret;
+			break;
+
+			case RCU_READER_ACTIVE_OLD:
+			// this is the waiting thread
+	     		//printf("tid : %ld status : 3\n",index->tid); 
+			stalled_reader = index;
+			goto report_gp;
+			break;
+		}
+  	}
 
 report_gp:
-  // Delete the node from registred threads list and wake wait_gp
-  mutex_lock(&rcu_registry_lock);
-  cds_list_del(&stalled_reader->node);
-  mutex_unlock(&rcu_registry_lock);
+  	// Delete the node from registred threads list and wake wait_gp
+ 	if(!stalled_reader)
+		return;	
+	mutex_lock(&rcu_registry_lock);
+  	cds_list_del(&stalled_reader->node);
+  	mutex_unlock(&rcu_registry_lock);
  
-  printf("debug: stalled thread killed\n");
+  	// printf("debug: stalled thread killed\n");
   
-  if(stalled_reader->tid)  
-    pthread_kill(stalled_reader->tid, 0);
-  
-  // wake all the waiting threads  
-  if(futex_async(&rcu_gp.futex, FUTEX_WAKE, 1,
-         NULL, NULL, 0) < 0) {
-    urcu_die(errno);
-  }
-  return;
+ 	if(stalled_reader && stalled_reader->tid){  
+    		int ret = pthread_cancel(stalled_reader->tid);
+    		if(!ret){
+    			printf("thread %ld killed: success\n",stalled_reader->tid);
+    		}
+    		else{
+    			printf("thread %ld kill: failed with %d\n",stalled_reader->tid,ret);
+    		}
+  	}
+ 	// wake all the waiting threads  
+ 	if(futex_async(&rcu_gp.futex, FUTEX_WAKE, 1,
+ 	       NULL, NULL, 0) < 0) {
+ 	   	urcu_die(errno);
+ 	}
+	return;
 }
 
 /***
@@ -319,25 +335,30 @@ report_gp:
 ***/
 
 
-static int wait_len = 10000000;
+static long int wait_len = 10000000;
 
 static void call_rcu_wake_up(struct call_rcu_data *crdp)
 {
-  /**
-    How to stop further call_backs triggering the resque fn?
+  	/**
+    	How to stop further call_backs triggering the resque fn?
 
-    At  present increaseng the wait length by 1e6 but doesn't seems
-    to be a good idea as we are increasing wait time for next fault.
-  **/
+    	At  present increaseng the wait length by 1e6 but doesn't seems
+    	to be a good idea as we are increasing wait time for next fault.
+	
+	Two ways to do it ;
+    	1. check if the time of current GP > thresh and cb->qlen > thresh
+    	2. check if callbackcs registered during this GP > thresh
+  	**/
 
-	if(crdp->qlen > wait_len ) {
-    if(pthread_mutex_trylock(&resque_lock)){
-      wait_len += 1000000;
-      resque(); 
-      pthread_mutex_unlock(&resque_lock);
-    }
-  }
-  /* Write to call_rcu list before reading/writing futex */
+	if((crdp->qlen - crdp->prev_qlen) > wait_len  && crdp->qlen > crdp->prev_qlen) {
+        		printf("resque started %ld %ld %ld %ld\n",crdp->qlen, crdp->prev_qlen,crdp->qlen - crdp->prev_qlen, wait_len);
+			resque();
+		//	synchronize_rcu();
+			crdp->prev_qlen = crdp->qlen;
+			printf("resque done\n"); 
+    	}
+  	
+	/* Write to call_rcu list before reading/writing futex */
 	cmm_smp_mb();
 	if (caa_unlikely(uatomic_read(&crdp->futex) == -1)) {
 		uatomic_set(&crdp->futex, 0);
@@ -476,14 +497,11 @@ static void *call_rcu_thread(void *arg)
     ***/
     if (splice_ret != CDS_WFCQ_RET_SRC_EMPTY) {
 			synchronize_rcu();
+			crdp->prev_qlen = crdp->qlen;
 			cbcount = 0;
 			__cds_wfcq_for_each_blocking_safe(&cbs_tmp_head,
 					&cbs_tmp_tail, cbs, cbs_tmp_n) {
 				struct rcu_head *rhp;
-  printf("debug: stalled thread killed\n");
-  if(stalled_reader->tid)  
-    pthread_kill(stalled_reader->tid, 0);
-
 				rhp = caa_container_of(cbs,
 					struct rcu_head, next);
 				rhp->func(rhp);

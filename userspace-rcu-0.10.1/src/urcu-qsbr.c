@@ -157,7 +157,6 @@ static void wait_for_readers(struct cds_list_head *input_readers,
 {
 	unsigned int wait_loops = 0;
 	struct rcu_reader *index, *tmp;
-
 	/*
 	 * Wait for each thread URCU_TLS(rcu_reader).ctr to either
 	 * indicate quiescence (offline), or for them to observe the
@@ -210,7 +209,7 @@ static void wait_for_readers(struct cds_list_head *input_readers,
 			}
 			break;
 		} else {
-			/* Temporarily unlock the registry lock. */
+	
 			mutex_unlock(&rcu_registry_lock);
 			if (wait_loops >= RCU_QS_ACTIVE_ATTEMPTS) {
 				wait_gp();
@@ -241,6 +240,7 @@ void synchronize_rcu(void)
 	unsigned long was_online;
 	DEFINE_URCU_WAIT_NODE(wait, URCU_WAIT_WAITING);
 	struct urcu_waiters waiters;
+	struct call_rcu_data *crdp;
 
 	was_online = rcu_read_ongoing();
 
@@ -292,8 +292,9 @@ void synchronize_rcu(void)
 	 * wait_for_readers() can release and grab again rcu_registry_lock
 	 * interally.
 	 */
+//	printf("start waiting\n");
 	wait_for_readers(&registry, &cur_snap_readers, &qsreaders);
-
+//	printf("end waiting\n");
 	/*
 	 * Must finish waiting for quiescent state for original parity
 	 * before committing next rcu_gp.ctr update to memory. Failure
@@ -335,8 +336,9 @@ void synchronize_rcu(void)
 	 * wait_for_readers() can release and grab again rcu_registry_lock
 	 * interally.
 	 */
+	printf("start waiting 2\n");
 	wait_for_readers(&cur_snap_readers, NULL, &qsreaders);
-
+	printf("end waiting 2\n");
 	/*
 	 * Put quiescent reader list back into registry.
 	 */
@@ -344,6 +346,9 @@ void synchronize_rcu(void)
 out:
 	mutex_unlock(&rcu_registry_lock);
 	mutex_unlock(&rcu_gp_lock);
+	crdp = get_call_rcu_data();
+	crdp->prev_qlen = crdp->qlen;
+	printf("prev qlen updated %d\n",crdp->qlen);
 	urcu_wake_all_waiters(&waiters);
 gp_end:
 	/*
@@ -356,12 +361,13 @@ gp_end:
 		cmm_smp_mb();
 }
 #else /* !(CAA_BITS_PER_LONG < 64) */
-    void synchronize_rcu(void)
+void synchronize_rcu(void)
 {
 	CDS_LIST_HEAD(qsreaders);
 	unsigned long was_online;
 	DEFINE_URCU_WAIT_NODE(wait, URCU_WAIT_WAITING);
 	struct urcu_waiters waiters;
+	struct call_rcu_data *crdp;
 
 	was_online = rcu_read_ongoing();
 
@@ -424,8 +430,9 @@ gp_end:
 	 * wait_for_readers() can release and grab again rcu_registry_lock
 	 * interally.
 	 */
+	//printf("start here 3\n");
 	wait_for_readers(&registry, NULL, &qsreaders);
-
+	//printf("end here 3\n");
 	/*
 	 * Put quiescent reader list back into registry.
 	 */
@@ -433,6 +440,9 @@ gp_end:
 out:
 	mutex_unlock(&rcu_registry_lock);
 	mutex_unlock(&rcu_gp_lock);
+	/*crdp = get_call_rcu_data();
+        crdp->prev_qlen = crdp->qlen;
+        printf("prev qlen updated %d\n",crdp->qlen);*/
 	urcu_wake_all_waiters(&waiters);
 gp_end:
 	if (was_online)
