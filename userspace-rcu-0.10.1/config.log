@@ -27,14 +27,16 @@ uname -v = #3 SMP PREEMPT Sat Aug 11 15:55:09 IST 2018
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
 
+PATH: /home/bharat/Downloads/linux-4.16.12/tools/perf
+PATH: /home/bharat/pintos3/src/utils
+PATH: /home/bharat/Desktop/llvm-build/bin
 PATH: /usr/local/sbin
 PATH: /usr/local/bin
 PATH: /usr/sbin
 PATH: /usr/bin
 PATH: /sbin
 PATH: /bin
-PATH: /usr/games
-PATH: /usr/local/games
+PATH: /snap/bin
 
 
 ## ----------- ##
@@ -1049,7 +1051,7 @@ configure:14924: $? = 0
 configure:14924: result: yes
 configure:14924: checking for getcpuid
 configure:14924: gcc -o conftest -g -O2   conftest.c  >&5
-/tmp/ccrndVQc.o: In function `main':
+/tmp/cc59sb8G.o: In function `main':
 /home/bharat/Desktop/RCU/ft-urcu/userspace-rcu-0.10.1/conftest.c:77: undefined reference to `getcpuid'
 collect2: error: ld returned 1 exit status
 configure:14924: $? = 1
@@ -1137,7 +1139,7 @@ configure: failed program was:
 configure:14924: result: no
 configure:14924: checking for gettid
 configure:14924: gcc -o conftest -g -O2   conftest.c  >&5
-/tmp/cc7ETAbf.o: In function `main':
+/tmp/ccn26MMO.o: In function `main':
 /home/bharat/Desktop/RCU/ft-urcu/userspace-rcu-0.10.1/conftest.c:77: undefined reference to `gettid'
 collect2: error: ld returned 1 exit status
 configure:14924: $? = 1
@@ -1229,7 +1231,7 @@ configure:14924: $? = 0
 configure:14924: result: yes
 configure:14924: checking for memeset
 configure:14924: gcc -o conftest -g -O2   conftest.c  >&5
-/tmp/ccPzncVk.o: In function `main':
+/tmp/ccJiWouW.o: In function `main':
 /home/bharat/Desktop/RCU/ft-urcu/userspace-rcu-0.10.1/conftest.c:78: undefined reference to `memeset'
 collect2: error: ld returned 1 exit status
 configure:14924: $? = 1

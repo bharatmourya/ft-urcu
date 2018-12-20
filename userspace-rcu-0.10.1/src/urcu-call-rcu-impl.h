@@ -335,7 +335,7 @@ report_gp:
 ***/
 
 
-static long int wait_len = 10000000;
+static long int wait_len = 20000000;
 
 static void call_rcu_wake_up(struct call_rcu_data *crdp)
 {
@@ -348,7 +348,7 @@ static void call_rcu_wake_up(struct call_rcu_data *crdp)
 	Two ways to do it ;
     	1. check if the time of current GP > thresh and cb->qlen > thresh
     	2. check if callbackcs registered during this GP > thresh
-  	**/
+  	
 
 	if((crdp->qlen - crdp->prev_qlen) > wait_len  && crdp->qlen > crdp->prev_qlen) {
         		printf("resque started %ld %ld %ld %ld\n",crdp->qlen, crdp->prev_qlen,crdp->qlen - crdp->prev_qlen, wait_len);
@@ -357,7 +357,7 @@ static void call_rcu_wake_up(struct call_rcu_data *crdp)
 			crdp->prev_qlen = crdp->qlen;
 			printf("resque done\n"); 
     	}
-  	
+  	*/
 	/* Write to call_rcu list before reading/writing futex */
 	cmm_smp_mb();
 	if (caa_unlikely(uatomic_read(&crdp->futex) == -1)) {
